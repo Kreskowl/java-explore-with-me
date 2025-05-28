@@ -203,6 +203,9 @@ public class EventServiceImpl implements EventService {
                 request.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ConflictException("Event date must be at least 2 hours in the future");
         }
+        if (!(event.getEventState().equals(EventState.PENDING) || event.getEventState().equals(EventState.CANCELED))) {
+            throw new ConflictException("Only pending or canceled events can be updated");
+        }
         if (request.getStateAction() != null) {
             handleUserStateAction(event, request.getStateAction());
         }
