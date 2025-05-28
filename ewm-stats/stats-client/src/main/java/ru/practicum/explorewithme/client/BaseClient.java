@@ -13,9 +13,11 @@ import java.util.Map;
 
 public class BaseClient {
     protected final RestTemplate rest;
+    private final String baseUrl;
 
-    public BaseClient(RestTemplate rest) {
-        this.rest = rest;
+    public BaseClient(RestTemplate restTemplate, String baseUrl) {
+        this.rest = restTemplate;
+        this.baseUrl = baseUrl;
     }
 
     private static HttpHeaders defaultHeaders() {
@@ -27,7 +29,7 @@ public class BaseClient {
     protected <T> ResponseEntity<Object> post(String path, T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders());
         try {
-            return rest.exchange(path, HttpMethod.POST, requestEntity, Object.class);
+            return rest.exchange(baseUrl + path, HttpMethod.POST, requestEntity, Object.class);
         } catch (HttpStatusCodeException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
         }
@@ -37,9 +39,9 @@ public class BaseClient {
         HttpEntity<Void> requestEntity = new HttpEntity<>(defaultHeaders());
         try {
             if (parameters != null) {
-                return rest.exchange(path, HttpMethod.GET, requestEntity, Object.class, parameters);
+                return rest.exchange(baseUrl + path, HttpMethod.GET, requestEntity, Object.class, parameters);
             } else {
-                return rest.exchange(path, HttpMethod.GET, requestEntity, Object.class);
+                return rest.exchange(baseUrl + path, HttpMethod.GET, requestEntity, Object.class);
             }
         } catch (HttpStatusCodeException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());

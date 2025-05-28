@@ -2,7 +2,6 @@ package ru.practicum.explorewithme;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +23,6 @@ import static ru.practicum.statsdto.Constants.DATE_TIME;
 @RequiredArgsConstructor
 @Validated
 @RestController
-@Slf4j
 public class StatController {
     private final StatsService service;
 

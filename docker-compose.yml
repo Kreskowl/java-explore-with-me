@@ -24,7 +24,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U stats_user -d stats"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d stats" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -38,6 +38,11 @@ services:
       - "8080:8080"
     depends_on:
       - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - STATS_CLIENT_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:16.1
@@ -46,10 +51,10 @@ services:
       - "6541:5432"
     environment:
       - POSTGRES_DB=main
-      - POSTGRES_USER=main_user
-      - POSTGRES_PASSWORD=main_pass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U main_user -d main"]
+      test: ["CMD-SHELL", "pg_isready -U postgres  -d main"]
       interval: 5s
       timeout: 5s
       retries: 10
