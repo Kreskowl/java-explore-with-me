@@ -61,6 +61,6 @@ public class Event {
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
-    private EventState eventState = EventState.PENDING;
+    private EventState state = EventState.PENDING;
     private Long views;
 }

@@ -59,7 +59,7 @@ public class EventPublicControllerTest {
         EventFullDto created = eventService.createEvent(user.getId(), createValidEventDto(cat.getId(), CREATE_TIME.plusHours(3)));
 
         Event event = eventRepository.findById(created.getId()).get();
-        event.setEventState(EventState.PUBLISHED);
+        event.setState(EventState.PUBLISHED);
         eventRepository.save(event);
 
         mockMvc.perform(get("/events")
@@ -85,7 +85,7 @@ public class EventPublicControllerTest {
         EventFullDto created = eventService.createEvent(user.getId(), createValidEventDto(cat.getId(), CREATE_TIME.plusDays(1)));
 
         Event event = eventRepository.findById(created.getId()).get();
-        event.setEventState(EventState.PUBLISHED);
+        event.setState(EventState.PUBLISHED);
         eventRepository.save(event);
 
         Mockito.when(statsClient.getViews(List.of("/events/" + event.getId())))

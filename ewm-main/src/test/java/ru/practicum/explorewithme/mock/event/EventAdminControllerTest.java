@@ -80,7 +80,7 @@ public class EventAdminControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(created.getId()))
-                .andExpect(jsonPath("$.eventState").value("PUBLISHED"));
+                .andExpect(jsonPath("$.state").value("PUBLISHED"));
     }
 
     @Test

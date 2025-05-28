@@ -47,7 +47,7 @@ public class EventFullDto {
     private LocalDateTime publishedOn;
     private boolean requestModeration;
     @Enumerated(EnumType.STRING)
-    private EventState eventState;
+    private EventState state;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long views;
 }

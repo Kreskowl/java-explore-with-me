@@ -21,7 +21,8 @@ import ru.practicum.explorewithme.user.model.User;
                 CategoryMapper.class,
                 LocationMapper.class,
                 UserMapper.class
-        }
+        },
+        nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE
 )
 public interface EventMapper {
 
@@ -33,14 +34,16 @@ public interface EventMapper {
     @Mapping(source = "category", target = "category")
     @Mapping(source = "initiator", target = "initiator")
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "eventState", constant = "PENDING")
+    @Mapping(target = "state", constant = "PENDING")
     @Mapping(target = "confirmedRequests", constant = "0")
     @Mapping(target = "views", constant = "0L")
     Event toEntity(NewEventDto dto, Category category, User initiator);
 
+    @Mapping(target = "state", ignore = true)
     @Mapping(target = "category", ignore = true)
     void updateEventFromUserRequest(UpdateEventUserRequest request, @MappingTarget Event event);
 
+    @Mapping(target = "state", ignore = true)
     @Mapping(target = "category", ignore = true)
     void updateEventFromAdminRequest(UpdateEventAdminRequest request, @MappingTarget Event event);
 }

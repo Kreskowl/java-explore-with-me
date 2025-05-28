@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.compilation.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class NewCompilationDto {
     private Boolean pinned;
-    @NotNull
+    @NotBlank
     @Size(min = 1, max = 50)
     private String title;
     private Set<Long> events = new HashSet<>();

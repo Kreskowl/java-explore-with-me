@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.user.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
 public class NewUserRequest {
-    @NotNull
+    @NotBlank
     @Size(min = 2, max = 250)
     private String name;
     @Email

@@ -48,7 +48,7 @@ public abstract class AbstractServiceTest {
                 .participantLimit(10)
                 .requestModeration(false)
                 .confirmedRequests(0)
-                .eventState(EventState.PUBLISHED)
+                .state(EventState.PUBLISHED)
                 .initiator(initiator)
                 .category(category)
                 .createdOn(LocalDateTime.now())

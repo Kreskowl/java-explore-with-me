@@ -30,7 +30,7 @@ public class TestDataFactory {
                 .participantLimit(participationLimit)
                 .requestModeration(requestModeration)
                 .confirmedRequests(confirmedRequest)
-                .eventState(eventState)
+                .state(eventState)
                 .initiator(initiator)
                 .category(category)
                 .createdOn(LocalDateTime.now())

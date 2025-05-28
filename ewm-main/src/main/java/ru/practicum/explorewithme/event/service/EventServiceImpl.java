@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService {
         }
         if (request.getEventDate() != null &&
                 request.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new ConflictException("Admin can’t schedule event earlier than 1 hour from now");
+            throw new ValidationException("Admin can’t schedule event earlier than 1 hour from now");
         }
 
         if (request.getStateAction() != null) {
@@ -141,7 +141,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getPublishedEventById(Long id, HttpServletRequest request) {
-        Event event = repository.findByIdAndEventState(id, EventState.PUBLISHED)
+        Event event = repository.findByIdAndState(id, EventState.PUBLISHED)
                 .orElseThrow(() -> new NotFoundException("Event not found or not published"));
 
         statsClient.saveHit(new StatDto(
@@ -201,9 +201,9 @@ public class EventServiceImpl implements EventService {
         }
         if (request.getEventDate() != null &&
                 request.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new ConflictException("Event date must be at least 2 hours in the future");
+            throw new ValidationException("Event date must be at least 2 hours in the future");
         }
-        if (!(event.getEventState().equals(EventState.PENDING) || event.getEventState().equals(EventState.CANCELED))) {
+        if (!(event.getState().equals(EventState.PENDING) || event.getState().equals(EventState.CANCELED))) {
             throw new ConflictException("Only pending or canceled events can be updated");
         }
         if (request.getStateAction() != null) {
@@ -235,17 +235,17 @@ public class EventServiceImpl implements EventService {
 
         switch (action) {
             case PUBLISH_EVENT:
-                if (!event.getEventState().equals(EventState.PENDING)) {
+                if (event.getState() != EventState.PENDING) {
                     throw new ConflictException("Only pending events can be published");
                 }
-                event.setEventState(EventState.PUBLISHED);
+                event.setState(EventState.PUBLISHED);
                 event.setPublishedOn(LocalDateTime.now());
                 break;
             case REJECT_EVENT:
-                if (!event.getEventState().equals(EventState.PENDING)) {
+                if (event.getState() != EventState.PENDING) {
                     throw new ConflictException("Cannot reject already published event or cancelled event");
                 }
-                event.setEventState(EventState.CANCELED);
+                event.setState(EventState.CANCELED);
                 break;
             default:
                 throw new ValidationException("Unsupported state action: " + action);
@@ -257,16 +257,16 @@ public class EventServiceImpl implements EventService {
 
         switch (action) {
             case SEND_TO_REVIEW:
-                if (!event.getEventState().equals(EventState.CANCELED)) {
+                if (event.getState() != EventState.CANCELED) {
                     throw new ConflictException("Only canceled events can be sent to review");
                 }
-                event.setEventState(EventState.PENDING);
+                event.setState(EventState.PENDING);
                 break;
             case CANCEL_REVIEW:
-                if (!event.getEventState().equals(EventState.PENDING)) {
+                if (event.getState() != EventState.PENDING) {
                     throw new ConflictException("Only pending events can be canceled");
                 }
-                event.setEventState(EventState.CANCELED);
+                event.setState(EventState.CANCELED);
                 break;
             default:
                 throw new ValidationException("Unsupported state action: " + action);

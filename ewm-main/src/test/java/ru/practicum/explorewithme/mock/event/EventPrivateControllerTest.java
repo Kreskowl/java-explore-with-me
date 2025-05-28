@@ -133,7 +133,7 @@ public class EventPrivateControllerTest {
         EventFullDto created = eventService.createEvent(owner.getId(),
                 createValidEventDto(category.getId(), CREATE_TIME.plusHours(4)));
         Event event = eventRepository.findById(created.getId()).get();
-        event.setEventState(EventState.PUBLISHED);
+        event.setState(EventState.PUBLISHED);
         eventRepository.save(event);
 
         requestService.makeRequest(requester.getId(), created.getId());
@@ -153,7 +153,7 @@ public class EventPrivateControllerTest {
         EventFullDto created = eventService.createEvent(owner.getId(),
                 createValidEventDto(category.getId(), CREATE_TIME.plusHours(5)));
         Event event = eventRepository.findById(created.getId()).get();
-        event.setEventState(EventState.PUBLISHED);
+        event.setState(EventState.PUBLISHED);
         eventRepository.save(event);
 
         ParticipationRequestDto req = requestService.makeRequest(requester.getId(), created.getId());
@@ -180,7 +180,7 @@ public class EventPrivateControllerTest {
         EventFullDto created = eventService.createEvent(owner.getId(),
                 createValidEventDto(category.getId(), CREATE_TIME.plusHours(3)));
         Event event = eventRepository.findById(created.getId()).get();
-        event.setEventState(EventState.PUBLISHED);
+        event.setState(EventState.PUBLISHED);
         eventRepository.save(event);
 
         ParticipationRequestDto req = requestService.makeRequest(requester.getId(), created.getId());

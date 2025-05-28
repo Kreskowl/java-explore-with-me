@@ -112,7 +112,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id " + eventId + " not found"));
 
-        if (event.getEventState() != EventState.PUBLISHED) {
+        if (event.getState() != EventState.PUBLISHED) {
             throw new ConflictException("Event with id " + eventId + " is not published");
         }
 
@@ -192,7 +192,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     private void validateEventPublished(Event event) {
-        if (!event.getEventState().equals(EventState.PUBLISHED)) {
+        if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new ConflictException("Cannot request participation in unpublished event");
         }
     }
