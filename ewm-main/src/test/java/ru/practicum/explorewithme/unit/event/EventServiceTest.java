@@ -25,6 +25,7 @@ import ru.practicum.explorewithme.event.model.EventState;
 import ru.practicum.explorewithme.event.service.EventService;
 import ru.practicum.explorewithme.exception.custom.ConflictException;
 import ru.practicum.explorewithme.exception.custom.NotFoundException;
+import ru.practicum.explorewithme.exception.custom.ValidationException;
 import ru.practicum.explorewithme.location.dto.LocationDto;
 import ru.practicum.explorewithme.unit.AbstractServiceTest;
 import ru.practicum.explorewithme.unit.TestDataFactory;
@@ -222,7 +223,7 @@ public class EventServiceTest extends AbstractServiceTest {
 
         assertThatThrownBy(() ->
                 eventService.updateUserEvent(requester.getId(), created.getId(), update)
-        ).isInstanceOf(ConflictException.class)
+        ).isInstanceOf(ValidationException.class)
                 .hasMessageContaining("Event date must be at least 2 hours in the future");
     }
 
