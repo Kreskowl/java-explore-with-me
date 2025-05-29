@@ -43,8 +43,6 @@ public class BaseClient {
         HttpEntity<Void> requestEntity = new HttpEntity<>(defaultHeaders());
         try {
             if (parameters != null) {
-                System.out.println("Final URL: " + baseUrl + path);
-                System.out.println("Params: " + parameters);
                 return rest.exchange(
                         baseUrl + path,
                         HttpMethod.GET,
@@ -53,8 +51,6 @@ public class BaseClient {
                         parameters
                 );
             } else {
-                System.out.println("Final URL: " + baseUrl + path);
-                System.out.println("Params: " + parameters);
                 return rest.exchange(
                         baseUrl + path,
                         HttpMethod.GET,
@@ -62,8 +58,8 @@ public class BaseClient {
                         responseType
                 );
             }
-        } catch (HttpStatusCodeException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(null);
+        } catch (HttpStatusCodeException statusCodeException) {
+            return ResponseEntity.status(statusCodeException.getStatusCode()).body(null);
         }
     }
 }

@@ -103,27 +103,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getPublishedEvents(EventSearchParams params, HttpServletRequest request) {
-        statsClient.saveHit(
-                new StatDto(
-                        "ewm-main",
-                        request.getRequestURI(),
-                        request.getRemoteAddr(),
-                        LocalDateTime.now()
-                )
-        );
-        if (params.getRangeStart() == null) {
-            params.setRangeStart(EARLIEST);
-        }
-        if (params.getRangeEnd() == null) {
-            params.setRangeEnd(LATEST);
-        }
+        normalizeDateRange(params);
+        validateRange(params);
 
-
-        Sort sort = Sort.by(Sort.Direction.ASC, "eventDate");
-        if (params.getSort() == SortType.VIEWS) {
-            sort = Sort.by(Sort.Direction.DESC, "views");
-        }
-
+        Sort sort = resolveSort(params.getSort());
         Pageable pageable = PageRequest.of(params.getFrom() / params.getSize(), params.getSize(), sort);
 
         List<Event> events = repository.findAllByPublicFilters(
@@ -137,14 +120,14 @@ public class EventServiceImpl implements EventService {
                 pageable
         ).getContent();
 
-        Map<Long, String> eventUriMap = events.stream()
-                .collect(Collectors.toMap(Event::getId, e -> "/events/" + e.getId()));
+        enrichWithViews(events);
 
-        Map<String, Long> views = statsClient.getViews(new ArrayList<>(eventUriMap.values()));
-
-        events.forEach(e ->
-                e.setViews(views.getOrDefault(eventUriMap.get(e.getId()), 0L))
-        );
+        statsClient.saveHit(new StatDto(
+                "ewm-main",
+                request.getRequestURI(),
+                request.getRemoteAddr(),
+                LocalDateTime.now()
+        ));
 
         return events.stream()
                 .map(mapper::toShortDto)
@@ -156,16 +139,15 @@ public class EventServiceImpl implements EventService {
         Event event = repository.findByIdAndState(id, EventState.PUBLISHED)
                 .orElseThrow(() -> new NotFoundException("Event not found or not published"));
 
+        String uri = "/events/" + id;
+        Map<String, Long> views = statsClient.getViews(List.of(uri));
+        event.setViews(views.getOrDefault(uri, 0L));
         statsClient.saveHit(new StatDto(
                 "ewm-main",
                 request.getRequestURI(),
                 request.getRemoteAddr(),
                 LocalDateTime.now()
         ));
-
-        String uri = "/events/" + id;
-        Map<String, Long> views = statsClient.getViews(List.of(uri));
-        event.setViews(views.getOrDefault(uri, 0L));
         return mapper.toFullDto(event);
     }
 
@@ -282,5 +264,35 @@ public class EventServiceImpl implements EventService {
             default:
                 throw new ValidationException("Unsupported state action: " + action);
         }
+    }
+
+    private void normalizeDateRange(EventSearchParams params) {
+        if (params.getRangeStart() == null) {
+            params.setRangeStart(LocalDateTime.now());
+        }
+        if (params.getRangeEnd() == null) {
+            params.setRangeEnd(LATEST);
+        }
+    }
+
+    private void validateRange(EventSearchParams params) {
+        if (params.getRangeEnd().isBefore(params.getRangeStart())) {
+            throw new ValidationException("rangeEnd must be after rangeStart");
+        }
+    }
+
+    private Sort resolveSort(SortType sortType) {
+        if (sortType == SortType.VIEWS) {
+            return Sort.by(Sort.Direction.DESC, "views");
+        }
+        return Sort.by(Sort.Direction.ASC, "eventDate");
+    }
+
+    private void enrichWithViews(List<Event> events) {
+        Map<Long, String> uriMap = events.stream()
+                .collect(Collectors.toMap(Event::getId, e -> "/events/" + e.getId()));
+
+        Map<String, Long> views = statsClient.getViews(new ArrayList<>(uriMap.values()));
+        events.forEach(e -> e.setViews(views.getOrDefault(uriMap.get(e.getId()), 0L)));
     }
 }
