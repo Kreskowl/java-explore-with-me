@@ -33,13 +33,12 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public List<ViewStats> getStats(@RequestParam(name = "start", defaultValue = "2000-01-01 00:00:00")
+    public List<ViewStats> getStats(@RequestParam(name = "start")
                                     @DateTimeFormat(pattern = DATE_TIME) LocalDateTime start,
-                                    @RequestParam(name = "end", defaultValue = "2100-01-01 00:00:00")
+                                    @RequestParam(name = "end")
                                     @DateTimeFormat(pattern = DATE_TIME) LocalDateTime end,
                                     @RequestParam(required = false) List<String> uris,
                                     @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
-        System.out.println("unique = " + unique);
         return service.getStats(start, end, uris, unique);
     }
 }

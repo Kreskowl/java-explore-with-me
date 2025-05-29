@@ -42,6 +42,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     private void validateRequestParams(LocalDateTime start, LocalDateTime end) {
+        if (start == null || end == null) {
+            throw new InvalidUriParameterException("Both start and end must be specified.");
+        }
         if (start.isAfter(end)) {
             throw new TimeRangeValidationException("Start must not be after end");
         }
