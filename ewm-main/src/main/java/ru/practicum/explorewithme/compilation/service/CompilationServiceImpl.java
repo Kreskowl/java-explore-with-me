@@ -84,13 +84,12 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest dto) {
         Compilation compilation = ifCompilationExist(compId);
 
-        mapper.updateCompilationFromDto(dto, compilation);
-
-        if (dto.getEvents() != null) {
+        if (dto.getEvents() != null && !dto.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllById(dto.getEvents());
             compilation.setEvents(new HashSet<>(events));
         }
 
+        mapper.updateCompilationFromDto(dto, compilation);
         Compilation updated = repository.save(compilation);
         return mapper.toDto(updated);
     }

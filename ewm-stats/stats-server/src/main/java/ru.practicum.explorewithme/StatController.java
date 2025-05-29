@@ -33,9 +33,9 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public List<ViewStats> getStats(@RequestParam("start")
+    public List<ViewStats> getStats(@RequestParam(name = "start", defaultValue = "2000-01-01 00:00:00")
                                     @DateTimeFormat(pattern = DATE_TIME) LocalDateTime start,
-                                    @RequestParam("end")
+                                    @RequestParam(name = "end", defaultValue = "2100-01-01 00:00:00")
                                     @DateTimeFormat(pattern = DATE_TIME) LocalDateTime end,
                                     @RequestParam(required = false) List<String> uris,
                                     @RequestParam(defaultValue = "false") boolean unique) {

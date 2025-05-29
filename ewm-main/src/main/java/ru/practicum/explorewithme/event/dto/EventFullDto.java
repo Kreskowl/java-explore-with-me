@@ -40,7 +40,6 @@ public class EventFullDto {
     private UserShortDto initiator;
     @NotNull
     private LocationDto location;
-    @NotNull
     private Boolean paid;
     private Integer participantLimit;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

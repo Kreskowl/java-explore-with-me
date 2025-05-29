@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.explorewithme.event.dto.EventShortDto;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -21,5 +22,5 @@ public class CompilationDto {
     private Boolean pinned;
     @NotBlank
     private String title;
-    private Set<EventShortDto> events;
+    private Set<EventShortDto> events = new HashSet<>();
 }

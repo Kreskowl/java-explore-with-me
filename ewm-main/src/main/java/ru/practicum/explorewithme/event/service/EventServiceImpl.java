@@ -102,10 +102,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getPublishedEvents(EventSearchParams params) {
+    public List<EventShortDto> getPublishedEvents(EventSearchParams params, HttpServletRequest request) {
+        statsClient.saveHit(
+                new StatDto(
+                        "ewm-main",
+                        request.getRequestURI(),
+                        request.getRemoteAddr(),
+                        LocalDateTime.now()
+                )
+        );
         if (params.getRangeStart() == null) {
             params.setRangeStart(EARLIEST);
         }
+        if (params.getRangeEnd() == null) {
+            params.setRangeEnd(LATEST);
+        }
+
 
         Sort sort = Sort.by(Sort.Direction.ASC, "eventDate");
         if (params.getSort() == SortType.VIEWS) {
@@ -154,7 +166,6 @@ public class EventServiceImpl implements EventService {
         String uri = "/events/" + id;
         Map<String, Long> views = statsClient.getViews(List.of(uri));
         event.setViews(views.getOrDefault(uri, 0L));
-
         return mapper.toFullDto(event);
     }
 

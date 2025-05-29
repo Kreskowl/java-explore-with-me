@@ -1,14 +1,15 @@
 package ru.practicum.explorewithme.client;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.statsdto.StatDto;
+import ru.practicum.statsdto.ViewStats;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,44 +30,42 @@ public class StatsClient extends BaseClient implements StatsServiceClient {
         return post("/hit", dto);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start,
-                                           LocalDateTime end,
-                                           List<String> uris,
-                                           boolean unique) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("start", URLEncoder.encode(start.format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8));
-        params.put("end", URLEncoder.encode(end.format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8));
-        params.put("unique", unique);
-
-        if (uris != null) {
-            for (int i = 0; i < uris.size(); i++) {
-                params.put("uris[" + i + "]", uris.get(i));
+    public ResponseEntity<List<ViewStats>> getStats(
+            LocalDateTime start,
+            LocalDateTime end,
+            List<String> uris,
+            boolean unique
+    ) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("start", start.format(DATE_TIME_FORMATTER));
+        params.add("end", end.format(DATE_TIME_FORMATTER));
+        params.add("unique", String.valueOf(unique));
+        if (uris != null && !uris.isEmpty()) {
+            for (String uri : uris) {
+                params.add("uris", uri);
             }
         }
-
-        return get("/stats", params);
-    }
-
-    private Map<String, Long> extractViews(ResponseEntity<Object> response) {
-        Object body = response.getBody();
-        if (!(body instanceof List<?> statsList)) return Map.of();
-
-        return statsList.stream()
-                .filter(item -> item instanceof Map)
-                .map(item -> (Map<?, ?>) item)
-                .collect(Collectors.toMap(
-                        m -> m.get("uri").toString(),
-                        m -> Long.parseLong(m.get("hits").toString())
-                ));
+        return get("/stats", params, new ParameterizedTypeReference<>() {
+        });
     }
 
     public Map<String, Long> getViews(List<String> uris) {
-        ResponseEntity<Object> response = getStats(
+        ResponseEntity<List<ViewStats>> response = getStats(
                 EARLIEST,
                 LocalDateTime.now(),
                 uris,
                 true
         );
-        return extractViews(response);
+
+        if (response.getBody() == null) {
+            return Map.of();
+        }
+
+        return response.getBody().stream()
+                .collect(Collectors.toMap(
+                        ViewStats::getUri,
+                        ViewStats::getHits,
+                        Long::sum
+                ));
     }
 }

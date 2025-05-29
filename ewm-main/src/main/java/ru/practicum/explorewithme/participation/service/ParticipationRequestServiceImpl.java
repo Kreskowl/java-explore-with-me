@@ -19,6 +19,8 @@ import ru.practicum.explorewithme.participation.repository.ParticipationRequestR
 import ru.practicum.explorewithme.user.model.User;
 import ru.practicum.explorewithme.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,6 +90,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         validateNotDuplicate(eventId, userId);
         validateParticipantLimitNotReached(event);
 
+
         RequestStatus status;
         if (event.getParticipantLimit() == 0) {
             status = RequestStatus.CONFIRMED;
@@ -95,6 +98,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             status = event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED;
         }
         ParticipationRequest request = mapper.toEntity(event, requester, status);
+        request.setCreated(LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
 
         if (status == RequestStatus.CONFIRMED) {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);

@@ -1,15 +1,15 @@
 package ru.practicum.explorewithme.client;
 
 import jakarta.annotation.Nullable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 public class BaseClient {
     protected final RestTemplate rest;
@@ -35,16 +35,35 @@ public class BaseClient {
         }
     }
 
-    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
+    protected <T> ResponseEntity<T> get(
+            String path,
+            @Nullable MultiValueMap<String, String> parameters,
+            ParameterizedTypeReference<T> responseType
+    ) {
         HttpEntity<Void> requestEntity = new HttpEntity<>(defaultHeaders());
         try {
             if (parameters != null) {
-                return rest.exchange(baseUrl + path, HttpMethod.GET, requestEntity, Object.class, parameters);
+                System.out.println("Final URL: " + baseUrl + path);
+                System.out.println("Params: " + parameters);
+                return rest.exchange(
+                        baseUrl + path,
+                        HttpMethod.GET,
+                        requestEntity,
+                        responseType,
+                        parameters
+                );
             } else {
-                return rest.exchange(baseUrl + path, HttpMethod.GET, requestEntity, Object.class);
+                System.out.println("Final URL: " + baseUrl + path);
+                System.out.println("Params: " + parameters);
+                return rest.exchange(
+                        baseUrl + path,
+                        HttpMethod.GET,
+                        requestEntity,
+                        responseType
+                );
             }
         } catch (HttpStatusCodeException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
+            return ResponseEntity.status(e.getStatusCode()).body(null);
         }
     }
 }

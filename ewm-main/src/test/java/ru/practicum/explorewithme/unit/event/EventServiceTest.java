@@ -37,6 +37,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static ru.practicum.explorewithme.event.model.EventState.PUBLISHED;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -119,7 +120,7 @@ public class EventServiceTest extends AbstractServiceTest {
         EventFullDto created = eventService.createEvent(requester.getId(), dto);
 
         Event event = eventRepository.findById(created.getId()).orElseThrow();
-        event.setState(EventState.PUBLISHED);
+        event.setState(PUBLISHED);
         eventRepository.save(event);
 
         String uri = "/events/" + event.getId();
@@ -127,8 +128,11 @@ public class EventServiceTest extends AbstractServiceTest {
                 .thenReturn(Map.of(uri, 100L));
 
         EventSearchParams params = setValidSearchParams(category.getId());
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/events");
+        request.setRemoteAddr("127.0.0.1");
 
-        List<EventShortDto> result = eventService.getPublishedEvents(params);
+        List<EventShortDto> result = eventService.getPublishedEvents(params, request);
 
         assertThat(result).hasSize(2);
         assertThat(result).anyMatch(e ->
@@ -201,7 +205,7 @@ public class EventServiceTest extends AbstractServiceTest {
         EventFullDto created = eventService.createEvent(requester.getId(), dto);
 
         Event event = eventRepository.findById(created.getId()).get();
-        event.setState(EventState.PUBLISHED);
+        event.setState(PUBLISHED);
         eventRepository.save(event);
 
         UpdateEventUserRequest update = new UpdateEventUserRequest();
@@ -233,7 +237,7 @@ public class EventServiceTest extends AbstractServiceTest {
         EventFullDto created = eventService.createEvent(requester.getId(), dto);
 
         Event event = eventRepository.findById(created.getId()).orElseThrow();
-        event.setState(EventState.PUBLISHED);
+        event.setState(PUBLISHED);
         eventRepository.save(event);
 
         String uri = "/events/" + event.getId();
@@ -264,7 +268,7 @@ public class EventServiceTest extends AbstractServiceTest {
 
         EventFullDto result = eventService.updateEventByAdmin(created.getId(), request);
 
-        assertThat(result.getState()).isEqualTo(EventState.PUBLISHED);
+        assertThat(result.getState()).isEqualTo(PUBLISHED);
         assertThat(result.getPublishedOn()).isNotNull();
     }
 
@@ -306,7 +310,7 @@ public class EventServiceTest extends AbstractServiceTest {
                 createValidEventDto(category.getId(), this.created.plusDays(2)));
 
         Event event = eventRepository.findById(created.getId()).orElseThrow();
-        event.setState(EventState.PUBLISHED);
+        event.setState(PUBLISHED);
         eventRepository.save(event);
 
         UpdateEventAdminRequest request = new UpdateEventAdminRequest();
@@ -322,7 +326,7 @@ public class EventServiceTest extends AbstractServiceTest {
         eventService.createEvent(requester.getId(), createValidEventDto(category.getId(), created.plusDays(1)));
 
         Event event = eventRepository.findAll().getFirst();
-        event.setState(EventState.PUBLISHED);
+        event.setState(PUBLISHED);
         eventRepository.save(event);
 
         List<EventFullDto> result = eventService.searchEvents(
@@ -336,7 +340,7 @@ public class EventServiceTest extends AbstractServiceTest {
         );
 
         assertThat(result).hasSize(1);
-        assertThat(result.getFirst().getState()).isEqualTo(EventState.PUBLISHED);
+        assertThat(result.getFirst().getState()).isEqualTo(PUBLISHED);
     }
 
     @Test
@@ -385,6 +389,7 @@ public class EventServiceTest extends AbstractServiceTest {
 
         assertThat(result).isNotEmpty();
     }
+
 
     private NewEventDto createValidEventDto(Long categoryId, LocalDateTime dateTime) {
         NewEventDto dto = new NewEventDto();

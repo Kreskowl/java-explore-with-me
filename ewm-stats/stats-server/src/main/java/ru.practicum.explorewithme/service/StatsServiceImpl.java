@@ -33,7 +33,6 @@ public class StatsServiceImpl implements StatsService {
                                     LocalDateTime end,
                                     List<String> uris,
                                     boolean unique) {
-
         validateRequestParams(start, end);
         validateUrisParams(uris);
 

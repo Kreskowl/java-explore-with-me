@@ -26,6 +26,7 @@ import ru.practicum.explorewithme.user.model.User;
 )
 public interface EventMapper {
 
+    @Mapping(source = "views", target = "views")
     EventFullDto toFullDto(Event event);
 
     EventShortDto toShortDto(Event event);

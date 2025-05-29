@@ -46,13 +46,6 @@ public class StatsControllerIntegrationTest {
                 .andExpect(jsonPath("$.error").value("Invalid request format"));
     }
 
-    @Test
-    void shouldReturn400WhenStartIsMissing() throws Exception {
-        mockMvc.perform(get("/stats")
-                        .param("end", "2025-12-31 23:59:59"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Missing required parameter: start"));
-    }
 
     @Test
     void shouldNotThrow_whenUrisIsNull() throws Exception {

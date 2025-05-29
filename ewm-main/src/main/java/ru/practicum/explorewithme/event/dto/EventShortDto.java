@@ -31,7 +31,6 @@ public class EventShortDto {
     private LocalDateTime eventDate;
     @NotNull
     private UserShortDto initiator;
-    @NotNull
     private Boolean paid;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long views;
