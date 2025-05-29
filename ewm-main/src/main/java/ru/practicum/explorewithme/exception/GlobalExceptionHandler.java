@@ -14,6 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.practicum.explorewithme.exception.custom.ConflictException;
 import ru.practicum.explorewithme.exception.custom.ForbiddenActionException;
 import ru.practicum.explorewithme.exception.custom.NotFoundException;
+import ru.practicum.explorewithme.exception.custom.ValidationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,8 +60,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(MethodArgumentNotValidException validException) {
-        return buildError(validException, HttpStatus.BAD_REQUEST, "Invalid request, validation failed");
+    public ApiError handleValidationException(ValidationException validationException) {
+        return buildError(validationException, HttpStatus.BAD_REQUEST, "Invalid request, validation failed");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

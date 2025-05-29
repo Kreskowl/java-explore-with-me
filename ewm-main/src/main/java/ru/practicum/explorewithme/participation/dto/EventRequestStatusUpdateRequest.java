@@ -1,5 +1,7 @@
 package ru.practicum.explorewithme.participation.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +21,6 @@ public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private RequestStatus status;
 }

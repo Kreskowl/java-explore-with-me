@@ -162,7 +162,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto createEvent(Long userId, NewEventDto dto) {
         if (dto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new ConflictException("Event date must be at least 2 hours in the future");
+            throw new ValidationException("Event date must be at least 2 hours in the future");
         }
 
         Category category = ifCategoryExists(dto.getCategory());

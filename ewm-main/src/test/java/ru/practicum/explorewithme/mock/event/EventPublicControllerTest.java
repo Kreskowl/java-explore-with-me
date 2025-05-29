@@ -53,10 +53,12 @@ public class EventPublicControllerTest {
 
     @Test
     void getEvents_shouldReturnFilteredPublishedList() throws Exception {
-        User user = userRepository.save(new User(null, "User", "user@x.com"));
+        User user = userRepository
+            .save(new User(null, "User", "user@x.com"));
         Category cat = categoryRepository.save(new Category(null, "Public"));
 
-        EventFullDto created = eventService.createEvent(user.getId(), createValidEventDto(cat.getId(), CREATE_TIME.plusHours(3)));
+        EventFullDto created = eventService.createEvent(user.getId(),
+                createValidEventDto(cat.getId(), CREATE_TIME.plusHours(6)));
 
         Event event = eventRepository.findById(created.getId()).get();
         event.setState(EventState.PUBLISHED);
@@ -67,7 +69,7 @@ public class EventPublicControllerTest {
                         .param("categories", cat.getId().toString())
                         .param("paid", "false")
                         .param("rangeStart", CREATE_TIME.minusDays(1).toString())
-                        .param("rangeEnd", CREATE_TIME.plusDays(1).toString())
+                        .param("rangeEnd", CREATE_TIME.plusDays(3).toString())
                         .param("onlyAvailable", "false")
                         .param("sort", "EVENT_DATE")
                         .param("from", "0")
@@ -82,7 +84,8 @@ public class EventPublicControllerTest {
         User user = userRepository.save(new User(null, "PublicUser", "public@user.com"));
         Category cat = categoryRepository.save(new Category(null, "SingleEvent"));
 
-        EventFullDto created = eventService.createEvent(user.getId(), createValidEventDto(cat.getId(), CREATE_TIME.plusDays(1)));
+        EventFullDto created = eventService
+                .createEvent(user.getId(), createValidEventDto(cat.getId(), CREATE_TIME.plusDays(1)));
 
         Event event = eventRepository.findById(created.getId()).get();
         event.setState(EventState.PUBLISHED);

@@ -24,7 +24,7 @@ spring:
       write-dates-as-timestamps: false
 
 stats-server:
-  url: http://localhost:9090
+  url: ${STATS_CLIENT_URL:http://stats-server:9090}
 logging:
   level:
     org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG

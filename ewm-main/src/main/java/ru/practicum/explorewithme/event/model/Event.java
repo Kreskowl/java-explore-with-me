@@ -54,7 +54,6 @@ public class Event {
     @NotNull
     @Embedded
     private Location location;
-    @NotNull
     private Boolean paid;
     private Integer participantLimit;
     private LocalDateTime publishedOn;

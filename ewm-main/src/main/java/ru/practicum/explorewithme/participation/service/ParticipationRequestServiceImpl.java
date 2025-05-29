@@ -50,7 +50,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             throw new ForbiddenActionException("Request does not belong to user with id " + userId);
         }
 
-        request.setStatus(RequestStatus.PENDING);
+        request.setStatus(RequestStatus.CANCELED);
         repository.save(request);
 
         return mapper.toDto(request);
@@ -88,7 +88,12 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         validateNotDuplicate(eventId, userId);
         validateParticipantLimitNotReached(event);
 
-        RequestStatus status = event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED;
+        RequestStatus status;
+        if (event.getParticipantLimit() == 0) {
+            status = RequestStatus.CONFIRMED;
+        } else {
+            status = event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED;
+        }
         ParticipationRequest request = mapper.toEntity(event, requester, status);
 
         if (status == RequestStatus.CONFIRMED) {
@@ -155,6 +160,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         int confirmed = event.getConfirmedRequests();
         int limit = event.getParticipantLimit();
 
+        if (status == RequestStatus.CONFIRMED && confirmed + requests.size() > limit) {
+            throw new ConflictException("Cannot confirm requests: participant limit would be exceeded");
+        }
+
         List<ParticipationRequest> confirmedList = new ArrayList<>();
         List<ParticipationRequest> rejectedList = new ArrayList<>();
 
@@ -204,9 +213,9 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     private void validateParticipantLimitNotReached(Event event) {
-        if (event.getParticipantLimit() != 0 &&
-                event.getConfirmedRequests() >= event.getParticipantLimit()) {
-            throw new ConflictException("Participant limit has been reached");
+        Integer limit = event.getParticipantLimit();
+        if (limit != 0 && event.getConfirmedRequests() >= limit) {
+            throw new ConflictException("Participant limit reached");
         }
     }
 }

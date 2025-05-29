@@ -70,7 +70,7 @@ public class EventServiceTest extends AbstractServiceTest {
         NewEventDto dto = createValidEventDto(category.getId(), created);
 
         assertThatThrownBy(() -> eventService.createEvent(requester.getId(), dto))
-                .isInstanceOf(ConflictException.class);
+                .isInstanceOf(ValidationException.class);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class EventSearchParams {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rangeEnd;
     private Boolean onlyAvailable = false;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private SortType sort;
     @Min(0)
     private Integer from = 0;

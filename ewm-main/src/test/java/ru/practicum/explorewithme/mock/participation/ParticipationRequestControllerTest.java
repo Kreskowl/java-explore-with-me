@@ -58,7 +58,7 @@ public class ParticipationRequestControllerTest {
 
         mockMvc.perform(post("/users/1/requests")
                         .param("eventId", "2"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.event").value(2))
                 .andExpect(jsonPath("$.requester").value(1))

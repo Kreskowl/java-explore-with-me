@@ -108,10 +108,10 @@ public class ParticipationRequestServiceTest extends AbstractServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(saved.getId());
-        assertThat(result.getStatus()).isEqualTo(RequestStatus.PENDING);
+        assertThat(result.getStatus()).isEqualTo(RequestStatus.CANCELED);
 
         ParticipationRequest updated = repository.findById(saved.getId()).orElseThrow();
-        assertThat(updated.getStatus()).isEqualTo(RequestStatus.PENDING);
+        assertThat(updated.getStatus()).isEqualTo(RequestStatus.CANCELED);
     }
 
     @Test
