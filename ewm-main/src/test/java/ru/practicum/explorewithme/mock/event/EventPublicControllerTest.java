@@ -54,7 +54,7 @@ public class EventPublicControllerTest {
     @Test
     void getEvents_shouldReturnFilteredPublishedList() throws Exception {
         User user = userRepository
-            .save(new User(null, "User", "user@x.com"));
+                .save(new User(null, "User", "user@x.com"));
         Category cat = categoryRepository.save(new Category(null, "Public"));
 
         EventFullDto created = eventService.createEvent(user.getId(),

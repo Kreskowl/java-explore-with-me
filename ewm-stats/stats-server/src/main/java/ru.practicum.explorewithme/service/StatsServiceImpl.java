@@ -35,7 +35,7 @@ public class StatsServiceImpl implements StatsService {
                                     boolean unique) {
         validateRequestParams(start, end);
         validateUrisParams(uris);
-
+        System.out.println(">>> Received unique = " + unique);
         return unique
                 ? repository.getStatsUnique(start, end, uris)
                 : repository.getStatsNonUnique(start, end, uris);

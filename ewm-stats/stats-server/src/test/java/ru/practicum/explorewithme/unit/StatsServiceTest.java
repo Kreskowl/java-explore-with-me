@@ -101,5 +101,7 @@ public class StatsServiceTest {
         assertThrows(TimeRangeValidationException.class, () ->
                 statsService.getStats(start.plusDays(1), end, uris, false));
     }
+
+
 }
 

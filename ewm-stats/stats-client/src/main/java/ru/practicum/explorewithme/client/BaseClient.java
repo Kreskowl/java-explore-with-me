@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public class BaseClient {
     protected final RestTemplate rest;
@@ -41,23 +42,21 @@ public class BaseClient {
             ParameterizedTypeReference<T> responseType
     ) {
         HttpEntity<Void> requestEntity = new HttpEntity<>(defaultHeaders());
+
         try {
-            if (parameters != null) {
-                return rest.exchange(
-                        baseUrl + path,
-                        HttpMethod.GET,
-                        requestEntity,
-                        responseType,
-                        parameters
-                );
-            } else {
-                return rest.exchange(
-                        baseUrl + path,
-                        HttpMethod.GET,
-                        requestEntity,
-                        responseType
-                );
-            }
+            String url = parameters != null
+                    ? UriComponentsBuilder.fromHttpUrl(baseUrl + path)
+                    .queryParams(parameters)
+                    .build()
+                    .toUriString()
+                    : baseUrl + path;
+
+            return rest.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    responseType
+            );
         } catch (HttpStatusCodeException statusCodeException) {
             return ResponseEntity.status(statusCodeException.getStatusCode()).body(null);
         }

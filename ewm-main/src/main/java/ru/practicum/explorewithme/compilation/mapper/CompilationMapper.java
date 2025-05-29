@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.compilation.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.explorewithme.compilation.dto.CompilationDto;
 import ru.practicum.explorewithme.compilation.dto.NewCompilationDto;
 import ru.practicum.explorewithme.compilation.dto.UpdateCompilationRequest;
@@ -13,7 +14,8 @@ import ru.practicum.explorewithme.event.model.Event;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = EventMapper.class)
+@Mapper(componentModel = "spring", uses = EventMapper.class,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CompilationMapper {
     CompilationDto toDto(Compilation compilation);
 

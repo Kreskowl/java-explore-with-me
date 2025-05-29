@@ -120,14 +120,14 @@ public class EventServiceImpl implements EventService {
                 pageable
         ).getContent();
 
-        enrichWithViews(events);
-
         statsClient.saveHit(new StatDto(
                 "ewm-main",
                 request.getRequestURI(),
                 request.getRemoteAddr(),
                 LocalDateTime.now()
         ));
+
+        enrichWithViews(events);
 
         return events.stream()
                 .map(mapper::toShortDto)
@@ -140,14 +140,16 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Event not found or not published"));
 
         String uri = "/events/" + id;
-        Map<String, Long> views = statsClient.getViews(List.of(uri));
-        event.setViews(views.getOrDefault(uri, 0L));
         statsClient.saveHit(new StatDto(
                 "ewm-main",
                 request.getRequestURI(),
                 request.getRemoteAddr(),
                 LocalDateTime.now()
         ));
+
+        Map<String, Long> views = statsClient.getViews(List.of(uri));
+        event.setViews(views.getOrDefault(uri, 0L));
+
         return mapper.toFullDto(event);
     }
 

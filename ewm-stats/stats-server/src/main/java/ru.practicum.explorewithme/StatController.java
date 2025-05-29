@@ -38,7 +38,8 @@ public class StatController {
                                     @RequestParam(name = "end", defaultValue = "2100-01-01 00:00:00")
                                     @DateTimeFormat(pattern = DATE_TIME) LocalDateTime end,
                                     @RequestParam(required = false) List<String> uris,
-                                    @RequestParam(defaultValue = "false") boolean unique) {
+                                    @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
+        System.out.println("unique = " + unique);
         return service.getStats(start, end, uris, unique);
     }
 }
