@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.category.model.Category;
 import ru.practicum.explorewithme.category.repository.CategoryRepository;
-import ru.practicum.explorewithme.client.StatsClient;
 import ru.practicum.explorewithme.event.dto.EventFullDto;
 import ru.practicum.explorewithme.event.dto.EventSearchParams;
 import ru.practicum.explorewithme.event.dto.EventShortDto;
@@ -27,9 +26,9 @@ import ru.practicum.explorewithme.exception.custom.ConflictException;
 import ru.practicum.explorewithme.exception.custom.NotFoundException;
 import ru.practicum.explorewithme.exception.custom.ValidationException;
 import ru.practicum.explorewithme.participation.model.RequestStatus;
+import ru.practicum.explorewithme.stats.StatsService;
 import ru.practicum.explorewithme.user.model.User;
 import ru.practicum.explorewithme.user.repository.UserRepository;
-import ru.practicum.statsdto.StatDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final EventMapper mapper;
-    private final StatsClient statsClient;
+    private final StatsService statsService;
 
     @Override
     public List<EventFullDto> searchEvents(List<Long> users,
@@ -61,7 +60,9 @@ public class EventServiceImpl implements EventService {
         Pageable pageable = PageRequest.of(from / size, size);
 
         List<EventState> stateEnums = states != null
-                ? states.stream().map(EventState::valueOf).toList()
+                ? states.stream()
+                .map(EventState::valueOf)
+                .toList()
                 : null;
         if (rangeStart == null) {
             rangeStart = EARLIEST;
@@ -117,15 +118,11 @@ public class EventServiceImpl implements EventService {
                 params.getRangeEnd(),
                 params.getOnlyAvailable(),
                 RequestStatus.CONFIRMED,
+                EventState.PUBLISHED,
                 pageable
-        ).getContent();
+        );
 
-        statsClient.saveHit(new StatDto(
-                "ewm-main",
-                request.getRequestURI(),
-                request.getRemoteAddr(),
-                LocalDateTime.now()
-        ));
+        statsService.saveHit(request);
 
         enrichWithViews(events);
 
@@ -140,14 +137,9 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Event not found or not published"));
 
         String uri = "/events/" + id;
-        statsClient.saveHit(new StatDto(
-                "ewm-main",
-                request.getRequestURI(),
-                request.getRemoteAddr(),
-                LocalDateTime.now()
-        ));
+        statsService.saveHit(request);
 
-        Map<String, Long> views = statsClient.getViews(List.of(uri));
+        Map<String, Long> views = statsService.getViews(List.of(uri));
         event.setViews(views.getOrDefault(uri, 0L));
 
         return mapper.toFullDto(event);
@@ -171,7 +163,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getUserEvents(Long userId, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        List<Event> events = repository.findByInitiatorId(userId, pageable).getContent();
+        List<Event> events = repository.findByInitiatorId(userId, pageable);
         return events.stream()
                 .map(mapper::toShortDto)
                 .collect(Collectors.toList());
@@ -294,7 +286,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, String> uriMap = events.stream()
                 .collect(Collectors.toMap(Event::getId, e -> "/events/" + e.getId()));
 
-        Map<String, Long> views = statsClient.getViews(new ArrayList<>(uriMap.values()));
+        Map<String, Long> views = statsService.getViews(new ArrayList<>(uriMap.values()));
         events.forEach(e -> e.setViews(views.getOrDefault(uriMap.get(e.getId()), 0L)));
     }
 }

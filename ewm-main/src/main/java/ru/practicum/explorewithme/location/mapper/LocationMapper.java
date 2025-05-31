@@ -6,7 +6,5 @@ import ru.practicum.explorewithme.location.model.Location;
 
 @Mapper(componentModel = "spring")
 public interface LocationMapper {
-    LocationDto toDto(Location location);
-
     Location toEntity(LocationDto dto);
 }

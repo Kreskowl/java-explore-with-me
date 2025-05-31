@@ -42,19 +42,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventPrivateControllerTest {
     private static final LocalDateTime CREATE_TIME = LocalDateTime.now();
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
     @Autowired
-    EventService eventService;
+    private EventService eventService;
     @Autowired
-    ParticipationRequestService requestService;
+    private ParticipationRequestService requestService;
 
     @Test
     void createEvent_shouldReturn201WithFullDto() throws Exception {

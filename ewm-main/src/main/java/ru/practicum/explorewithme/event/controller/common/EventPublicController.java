@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.event.dto.EventFullDto;
 import ru.practicum.explorewithme.event.dto.EventSearchParams;
 import ru.practicum.explorewithme.event.dto.EventShortDto;
@@ -30,12 +31,14 @@ public class EventPublicController {
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+            @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+            LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+            LocalDateTime rangeEnd,
             @RequestParam(required = false, defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(required = false, defaultValue = "EVENT_DATE") SortType sort,
-            @RequestParam(defaultValue = "0") Integer from,
-            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE) Integer from,
+            @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE) Integer size,
             HttpServletRequest request
     ) {
         String safeText = text == null ? "" : text;

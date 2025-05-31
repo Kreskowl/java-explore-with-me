@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.compilation.dto.CompilationDto;
 import ru.practicum.explorewithme.compilation.service.CompilationService;
 
@@ -23,8 +24,10 @@ public class CompilationPublicController {
 
     @GetMapping
     public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
-                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                                @RequestParam(defaultValue = "10") @Positive int size) {
+                                                @RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE)
+                                                @PositiveOrZero int from,
+                                                @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE)
+                                                @Positive int size) {
         return service.getCompilations(pinned, from, size);
     }
 

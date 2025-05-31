@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.category.dto.CategoryDto;
 import ru.practicum.explorewithme.category.service.CategoryService;
 
@@ -23,8 +24,10 @@ public class CategoryPublicController {
     private final CategoryService service;
 
     @GetMapping
-    public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") @PositiveOrZero long from,
-                                           @RequestParam(defaultValue = "10") @Positive long size) {
+    public List<CategoryDto> getCategories(@RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE)
+                                           @PositiveOrZero long from,
+                                           @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE)
+                                           @Positive long size) {
         return service.getCategories(from, size);
     }
 

@@ -54,7 +54,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void deleteCategory(long catId) {
         Category category = ifCategoryExists(catId);
-        System.out.println("Категория используется? " + eventRepository.existsByCategoryId(catId));
         if (eventRepository.existsByCategoryId(catId)) {
             throw new ConflictException("Cannot delete category: associated events exist");
         }

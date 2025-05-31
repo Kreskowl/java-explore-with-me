@@ -39,15 +39,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventPublicControllerTest {
     private static final LocalDateTime CREATE_TIME = LocalDateTime.now();
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
     @Autowired
-    EventService eventService;
+    private EventService eventService;
     @MockBean
     private StatsClient statsClient;
 

@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.compilation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,9 +34,9 @@ public class CompilationServiceImpl implements CompilationService {
         }
         Pageable pageable = PageRequest.of(from / size, size);
 
-        Page<Compilation> compilations = (pinned != null)
+        List<Compilation> compilations = (pinned != null)
                 ? repository.findByPinned(pinned, pageable)
-                : repository.findAll(pageable);
+                : repository.findAll(pageable).getContent();
 
         return compilations.stream()
                 .map(mapper::toDto)

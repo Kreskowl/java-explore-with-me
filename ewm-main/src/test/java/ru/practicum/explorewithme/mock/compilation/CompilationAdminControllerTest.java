@@ -37,11 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class CompilationAdminControllerTest {
     @MockBean
-    CompilationService service;
+    private CompilationService service;
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Test
     void createCompilation_shouldReturnCreatedCompilation() throws Exception {

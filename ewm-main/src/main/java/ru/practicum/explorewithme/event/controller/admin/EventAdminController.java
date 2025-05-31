@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.event.dto.EventFullDto;
 import ru.practicum.explorewithme.event.dto.UpdateEventAdminRequest;
 import ru.practicum.explorewithme.event.service.EventService;
@@ -30,10 +31,12 @@ public class EventAdminController {
             @RequestParam(required = false) List<Long> users,
             @RequestParam(required = false) List<String> states,
             @RequestParam(required = false) List<Long> categories,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-            @RequestParam(defaultValue = "0") int from,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+            LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+            LocalDateTime rangeEnd,
+            @RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE) int from,
+            @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE) int size
     ) {
         return service.searchEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }

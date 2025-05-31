@@ -35,15 +35,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventAdminControllerTest {
     private static final LocalDateTime CREATE_TIME = LocalDateTime.now();
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
-    EventService eventService;
+    private EventService eventService;
 
     @Test
     void getEvents_shouldReturn200WithFilteredResults() throws Exception {

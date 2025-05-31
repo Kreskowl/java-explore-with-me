@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.event.model.AdminStateAction;
 import ru.practicum.explorewithme.location.dto.LocationDto;
 
@@ -27,7 +28,7 @@ public class UpdateEventAdminRequest {
     @Size(min = 20, max = 2000)
     private String annotation;
     private Long category;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
     private LocationDto location;
     private Boolean paid;

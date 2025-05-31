@@ -29,6 +29,8 @@ public interface CompilationMapper {
 
     default List<Long> mapEventsToIds(List<Event> events) {
         if (events == null) return null;
-        return events.stream().map(Event::getId).collect(Collectors.toList());
+        return events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
     }
 }

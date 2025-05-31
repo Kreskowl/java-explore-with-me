@@ -27,9 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class CompilationPublicControllerTest {
     @MockBean
-    CompilationService service;
+    private CompilationService service;
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     void getCompilations_shouldReturnFilteredList() throws Exception {

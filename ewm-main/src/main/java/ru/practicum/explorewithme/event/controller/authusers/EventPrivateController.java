@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.event.dto.EventFullDto;
 import ru.practicum.explorewithme.event.dto.EventShortDto;
 import ru.practicum.explorewithme.event.dto.NewEventDto;
@@ -42,8 +43,10 @@ public class EventPrivateController {
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@PathVariable Long userId,
-                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                             @RequestParam(defaultValue = "10") @Positive int size) {
+                                             @RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE)
+                                             @PositiveOrZero int from,
+                                             @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE)
+                                             @Positive int size) {
         return eventService.getUserEvents(userId, from, size);
     }
 

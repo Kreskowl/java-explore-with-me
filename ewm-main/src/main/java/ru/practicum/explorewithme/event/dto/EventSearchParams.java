@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.explorewithme.Constants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,9 +21,9 @@ public class EventSearchParams {
     private String text;
     private List<Long> categories;
     private Boolean paid;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
     private LocalDateTime rangeStart;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
     private LocalDateTime rangeEnd;
     private Boolean onlyAvailable = false;
     @JsonFormat(shape = JsonFormat.Shape.STRING)

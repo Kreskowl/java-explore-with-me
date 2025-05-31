@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.Constants;
 import ru.practicum.explorewithme.user.dto.NewUserRequest;
 import ru.practicum.explorewithme.user.dto.UserDto;
 import ru.practicum.explorewithme.user.service.UserService;
@@ -36,8 +37,8 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getUsers(@RequestParam(required = false) List<Long> ids,
-                                  @RequestParam(defaultValue = "0") @PositiveOrZero long from,
-                                  @RequestParam(defaultValue = "10") @Positive long size) {
+                                  @RequestParam(defaultValue = Constants.DEFAULT_FROM_VALUE) @PositiveOrZero long from,
+                                  @RequestParam(defaultValue = Constants.DEFAULT_SIZE_VALUE) @Positive long size) {
         return service.getUsers(ids, from, size);
     }
 
