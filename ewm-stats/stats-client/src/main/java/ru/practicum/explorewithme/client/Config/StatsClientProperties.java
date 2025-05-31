@@ -7,9 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "stats-server")
-public class ServerConfigProperties {
+public class StatsClientProperties {
     private String url;
 
-    public ServerConfigProperties() {
+    public StatsClientProperties() {
     }
 }

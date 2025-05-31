@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.unit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.entity.Stat;
 import ru.practicum.explorewithme.exception.InvalidUriParameterException;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 public class StatsServiceTest {
 
@@ -99,5 +101,7 @@ public class StatsServiceTest {
         assertThrows(TimeRangeValidationException.class, () ->
                 statsService.getStats(start.plusDays(1), end, uris, false));
     }
+
+
 }
 

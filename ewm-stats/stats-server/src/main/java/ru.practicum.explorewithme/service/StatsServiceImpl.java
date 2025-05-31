@@ -33,16 +33,18 @@ public class StatsServiceImpl implements StatsService {
                                     LocalDateTime end,
                                     List<String> uris,
                                     boolean unique) {
-
         validateRequestParams(start, end);
         validateUrisParams(uris);
-
+        System.out.println(">>> Received unique = " + unique);
         return unique
                 ? repository.getStatsUnique(start, end, uris)
                 : repository.getStatsNonUnique(start, end, uris);
     }
 
     private void validateRequestParams(LocalDateTime start, LocalDateTime end) {
+        if (start == null || end == null) {
+            throw new InvalidUriParameterException("Both start and end must be specified.");
+        }
         if (start.isAfter(end)) {
             throw new TimeRangeValidationException("Start must not be after end");
         }

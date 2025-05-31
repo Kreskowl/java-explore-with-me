@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.StatsApp;
 import ru.practicum.explorewithme.client.Config.RestTemplateConfig;
-import ru.practicum.explorewithme.client.Config.ServerConfigProperties;
+import ru.practicum.explorewithme.client.Config.StatsClientProperties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         classes = {StatsApp.class, RestTemplateConfig.class},
         properties = "stats-server.url=http://localhost:9090"
 )
-@EnableConfigurationProperties(ServerConfigProperties.class)
+@EnableConfigurationProperties(StatsClientProperties.class)
 class ConfigTest {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    private ServerConfigProperties config;
+    private StatsClientProperties config;
 
     @Test
     void shouldLoadRestTemplateBean() {
@@ -32,7 +32,7 @@ class ConfigTest {
 
     @Test
     void shouldLoadConfig() {
-        ServerConfigProperties props = new ServerConfigProperties();
+        StatsClientProperties props = new StatsClientProperties();
         props.setUrl("http://test");
         assertEquals("http://test", props.getUrl());
     }
