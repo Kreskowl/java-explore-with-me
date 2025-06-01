@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.unit;
 
 import ru.practicum.explorewithme.category.model.Category;
+import ru.practicum.explorewithme.comment.dto.CommentTextDto;
 import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.event.model.EventState;
 import ru.practicum.explorewithme.location.model.Location;
@@ -15,6 +16,10 @@ public class TestDataFactory {
 
     public static Category createCategory(String name) {
         return new Category(null, name);
+    }
+
+    public static CommentTextDto createCommentDto(String text) {
+        return new CommentTextDto(text);
     }
 
 
