@@ -27,7 +27,7 @@ public class CommentSearchParams {
     private LocalDateTime rangeEnd;
     private Sort.Direction sort = Sort.Direction.DESC;
     @Min(0)
-    private Integer from = 0;
+    private int from = Integer.parseInt(Constants.DEFAULT_FROM_VALUE);
     @Min(1)
-    private Integer size = 10;
+    private int size = Integer.parseInt(Constants.DEFAULT_SIZE_VALUE);
 }
