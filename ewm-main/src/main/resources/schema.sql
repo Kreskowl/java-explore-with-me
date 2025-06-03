@@ -37,6 +37,15 @@ CREATE TABLE IF NOT EXISTS participation_request (
     status VARCHAR NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS comments (
+    id BIGSERIAL PRIMARY KEY,
+    text TEXT NOT NULL,
+    event_id BIGINT NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+    author_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_by_admin BOOLEAN
+);
+
 CREATE TABLE IF NOT EXISTS compilation (
     id BIGSERIAL PRIMARY KEY,
     pinned BOOLEAN NOT NULL DEFAULT FALSE,
@@ -55,3 +64,5 @@ CREATE INDEX IF NOT EXISTS idx_request_event_id ON participation_request (event_
 CREATE INDEX IF NOT EXISTS idx_request_requester_id ON participation_request (requester_id);
 CREATE INDEX IF NOT EXISTS idx_event_initiator_id ON event (initiator_id);
 CREATE INDEX IF NOT EXISTS idx_event_category_id ON event (category_id);
+CREATE INDEX IF NOT EXISTS idx_comments_event_id ON comments (event_id);
+CREATE INDEX IF NOT EXISTS idx_comments_author_id ON comments (author_id);
